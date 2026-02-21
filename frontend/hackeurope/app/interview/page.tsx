@@ -1,58 +1,102 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-import ChatWindow from "@/components/ChatWindow";
-import MessageInput from "@/components/MessageInput";
-import { sendMessage, type Message } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { createConversation } from "@/lib/api";
+
+type PageState = "loading" | "active" | "ended" | "error";
 
 export default function InterviewPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const interviewType = searchParams.get("type") ?? "coding";
 
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [pageState, setPageState] = useState<PageState>("loading");
+  const [error, setError] = useState<string>("");
+  const [conversationUrl, setConversationUrl] = useState<string>("");
 
-  // Kick off the interview when the page loads
   useEffect(() => {
-    async function startInterview() {
-      setLoading(true);
+    let cancelled = false;
+
+    async function start() {
       try {
-        const reply = await sendMessage([], interviewType);
-        setMessages([{ role: "assistant", content: reply }]);
-      } finally {
-        setLoading(false);
+        const { conversation_url } = await createConversation(interviewType);
+        if (!cancelled) {
+          setConversationUrl(conversation_url);
+          setPageState("active");
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setError(e instanceof Error ? e.message : "Something went wrong");
+          setPageState("error");
+        }
       }
     }
-    startInterview();
+
+    start();
+    return () => { cancelled = true; };
   }, [interviewType]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const label = interviewType === "system-design" ? "System Design" : "Coding";
 
-  async function handleSend(text: string) {
-    const updated: Message[] = [...messages, { role: "user", content: text }];
-    setMessages(updated);
-    setLoading(true);
-    try {
-      const reply = await sendMessage(updated, interviewType);
-      setMessages([...updated, { role: "assistant", content: reply }]);
-    } finally {
-      setLoading(false);
-    }
+  if (pageState === "ended") {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <h1 className="text-2xl font-semibold">Interview Ended</h1>
+        <p className="text-zinc-400">Thanks for practicing!</p>
+        <button
+          onClick={() => router.push("/")}
+          className="px-6 py-2 bg-white text-black rounded-lg font-medium hover:bg-zinc-200 transition"
+        >
+          Back to Home
+        </button>
+      </div>
+    );
+  }
+
+  if (pageState === "error") {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <h1 className="text-2xl font-semibold text-red-400">Error</h1>
+        <p className="text-zinc-400">{error}</p>
+        <button
+          onClick={() => router.push("/")}
+          className="px-6 py-2 bg-white text-black rounded-lg font-medium hover:bg-zinc-200 transition"
+        >
+          Back to Home
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto px-4 py-6">
-      <h1 className="text-xl font-semibold mb-4">Mock Interview</h1>
-      <ChatWindow messages={messages} />
-      {loading && (
-        <p className="text-xs text-zinc-400 py-2">Interviewer is typing...</p>
-      )}
-      <div ref={bottomRef} />
-      <MessageInput onSend={handleSend} disabled={loading} />
+    <div className="flex flex-col h-screen">
+      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
+        <h1 className="text-lg font-semibold">{label} Interview</h1>
+        <button
+          onClick={() => setPageState("ended")}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition"
+        >
+          End Interview
+        </button>
+      </header>
+
+      <div className="flex-1 relative">
+        {pageState === "loading" && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-zinc-400 animate-pulse">
+              Setting up your interview...
+            </p>
+          </div>
+        )}
+        {conversationUrl && (
+          <iframe
+            src={conversationUrl}
+            allow="camera; microphone; autoplay; display-capture"
+            className="w-full h-full border-0 rounded-xl"
+          />
+        )}
+      </div>
     </div>
   );
 }

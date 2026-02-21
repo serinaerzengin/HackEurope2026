@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -181,6 +181,7 @@ dependencies = [
     { name = "deepagents" },
     { name = "fastapi", extra = ["standard"] },
     { name = "firecrawl" },
+    { name = "httpx" },
     { name = "langchain" },
     { name = "langchain-openai" },
     { name = "langgraph" },
@@ -195,6 +196,7 @@ requires-dist = [
     { name = "deepagents", specifier = ">=0.4.3" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115" },
     { name = "firecrawl", specifier = ">=4.16.0" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "langchain", specifier = ">=1.2.10" },
     { name = "langchain-openai", specifier = ">=1.1.10" },
     { name = "langgraph", specifier = ">=1.0.9" },
