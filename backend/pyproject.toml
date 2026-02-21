@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.115",
+    "firecrawl>=4.16.0",
     "langchain>=1.2.10",
     "langgraph>=1.0.9",
     "langsmith>=0.7.6",
