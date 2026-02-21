@@ -50,7 +50,7 @@ def main():
                 },
                 "conversational_flow": {
                     "turn_detection_model": "sparrow-1",
-                    "turn_taking_patience": "high",
+                    "turn_taking_patience": "medium",
                 },
             },
         },
