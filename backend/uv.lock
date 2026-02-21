@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -48,6 +48,7 @@ dependencies = [
     { name = "langgraph" },
     { name = "langsmith" },
     { name = "pydantic" },
+    { name = "python-dotenv" },
     { name = "uvicorn" },
 ]
 
@@ -58,6 +59,7 @@ requires-dist = [
     { name = "langgraph", specifier = ">=1.0.9" },
     { name = "langsmith", specifier = ">=0.7.6" },
     { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "python-dotenv", specifier = ">=1.2.1" },
     { name = "uvicorn", specifier = ">=0.30" },
 ]
 
