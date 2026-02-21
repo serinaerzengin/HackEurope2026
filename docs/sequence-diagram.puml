@@ -1,0 +1,61 @@
+@startuml
+actor interviewee as "Interviewee\n(User)"
+participant client
+participant tavus as "Tavus\n(API)"
+participant backend as "Backend\n(Application)"
+
+
+interviewee -> client: Send in job description (link to job posting) \nand type of interview
+
+note right 
+    Phase 0: Pre interview
+end note
+
+client -> client: setup room/session for interview
+client -> backend: Sends job description and interview type
+
+backend -> backend: Crawls jobsite to find "About us" and create persona
+backend -> backend: Cache information
+backend -> backend: Analyzes job description and interview type to determine \nfind relevant tasks to ask (RAG)
+backend -> tavus: Sends relevant system prompts and questions to Tavus API \nand company and job description
+
+note right 
+    Phase 1: Interviewer describes task and asks questions
+end note
+
+tavus -> client: Shows video and sends questions and responses
+client -> interviewee: Describe the problem and asks interviewee to solve it on shared screen
+client -> tavus: (optional) pause tavus to give interviewee time to solve the problem
+tavus -> tavus: pause pls dont burn our money
+interviewee -> client: Ask clarifiation questions
+
+interviewee -> client: Speaks to interviewer \nand shows solutions on shared screen
+
+note right 
+    Phase 2: Interviewee presents solution and answers follow up questions
+end note
+
+' Phase 2
+loop while interview: 
+    interviewee -> client: Presents their solution and answer questions
+    client -> tavus: Sends responses
+    tavus -> tavus: Analyzes speech and video and transcribes the interview
+    tavus -> client: Receives 'event.properties.speech' and 'event.properties.role'.
+    client -> backend: Sends 'event.properties.speech' and 'event.properties.role'
+    backend -> backend: Analyzes the speech and role to determine response  
+    backend -> backend: Analyzes the solution to determine if the solution is correct
+    backend -> backend: Generate follow-up questions based on the analysis
+    backend -> backend: Evaluate and create feedback on each uterance and store for later use
+    backend -> client: Sends follow-up questions and feedback to the client
+    client -> tavus: (Echo) speak
+    tavus -> client: Stream video and audio
+    client -> interviewee: Displays Tavus Avatar and responds
+
+end
+
+backend -> backend: Score entire interview on metrics (Report agent)
+backend -> client: Send transcript with interview scoring
+client -> interviewee: Display interview results
+backend -> backend: (Deepeval) how well did the agent do
+
+@enduml
