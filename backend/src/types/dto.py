@@ -3,7 +3,7 @@ Data Transfer Objects (DTOs)
 """
 
 from pydantic import BaseModel
-from types.cases import CaseDSAProblem, CaseSoftwareDesignProblem
+from src.types.cases import CaseDSAProblem, CaseSoftwareDesignProblem
 
 
 class InterviewStartResponse(BaseModel):

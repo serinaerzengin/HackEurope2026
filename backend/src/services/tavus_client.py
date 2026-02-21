@@ -1,5 +1,5 @@
 import httpx
-from configuration import TAVUS_API_KEY
+from src.configuration import TAVUS_API_KEY
 
 TAVUS_API_BASE = "https://tavusapi.com/v2"
 

@@ -1,4 +1,4 @@
-from types.cases import CaseType, ExtractDSASchema, ExtractDesignSchema
+from src.types.cases import CaseType, ExtractDSASchema, ExtractDesignSchema
 
 
 def fetch_cases_from_db(

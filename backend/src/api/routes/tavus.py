@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from configuration import TAVUS_PERSONA_ID, TAVUS_REPLICA_ID
-from services.tavus_client import create_conversation
-from services.mock_tasks import MOCK_TASKS
+from src.configuration import TAVUS_PERSONA_ID, TAVUS_REPLICA_ID
+from src.services.tavus_client import create_conversation
+from src.services.mock_tasks import MOCK_TASKS
 
 router = APIRouter()
 

@@ -4,8 +4,8 @@ This module is responsible for crawling web pages and extracting content using t
 
 import requests
 from firecrawl import Firecrawl
-from configuration import FIRECRAWL_API_KEY
-from types.cases import ExtractDSASchema, ExtractDesignSchema
+from src.configuration import FIRECRAWL_API_KEY
+from src.types.cases import ExtractDSASchema, ExtractDesignSchema
 
 FIRECRAWL_URL = "https://api.firecrawl.dev/v2/scrape"
 
