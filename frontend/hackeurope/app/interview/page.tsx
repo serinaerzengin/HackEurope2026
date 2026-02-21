@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import ChatWindow from "@/components/ChatWindow";
 import MessageInput from "@/components/MessageInput";
 import { sendMessage, type Message } from "@/lib/api";
 
 export default function InterviewPage() {
+  const searchParams = useSearchParams();
+  const interviewType = searchParams.get("type") ?? "coding";
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -15,14 +19,14 @@ export default function InterviewPage() {
     async function startInterview() {
       setLoading(true);
       try {
-        const reply = await sendMessage([]);
+        const reply = await sendMessage([], interviewType);
         setMessages([{ role: "assistant", content: reply }]);
       } finally {
         setLoading(false);
       }
     }
     startInterview();
-  }, []);
+  }, [interviewType]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,7 +37,7 @@ export default function InterviewPage() {
     setMessages(updated);
     setLoading(true);
     try {
-      const reply = await sendMessage(updated);
+      const reply = await sendMessage(updated, interviewType);
       setMessages([...updated, { role: "assistant", content: reply }]);
     } finally {
       setLoading(false);
