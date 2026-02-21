@@ -29,6 +29,10 @@ frontend/hackeurope/
 ## To run
 
 ```bash
+docker compose up --build
+
+```
+```bash
 # Backend
 cd backend
 cp .env.example .env        # add your ANTHROPIC_API_KEY
