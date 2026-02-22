@@ -15,8 +15,11 @@ def fetch_all_board_items(board_id: str, limit: int = 50) -> list[dict[str, Any]
     Fetch all items from a Miro board using cursor pagination.
     GET https://api.miro.com/v2/boards/{board_id}/items
     """
+    print(
+        f"Fetching Miro board items from board {board_id} with limit {limit} per page..."
+    )
     # url = "https://api.miro.com/v2/boards/board_id/groups"
-    url = f"https://api.miro.com/v2/boards/{board_id}/groups"
+    url = f"https://api.miro.com/v2/boards/{board_id}/items"
     items: list[dict[str, Any]] = []
     cursor: str | None = None
 
