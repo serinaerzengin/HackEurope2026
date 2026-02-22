@@ -44,27 +44,26 @@ def fetch_cases_from_db(
             # Fetch software design cases from the database and return them as a list of ExtractDesignSchema
             return [
                 CaseSoftwareDesignProblem(
-    name="Design a Todo List Service",
-    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
-    complexity=ProblemComplexity.EASY,
-    role=["SWE", "SDE", "Backend"],
-    resources=[
-        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
-        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
-    ],
-),
-         CaseSoftwareDesignProblem(
-    name="Design a Todo List Service",
-    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
-    complexity=ProblemComplexity.EASY,
-    role=["SWE", "SDE", "Backend"],
-    resources=[
-        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
-        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
-    ],
-),
+                    name="Design a Todo List Service",
+                    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
+                    complexity=ProblemComplexity.EASY,
+                    role=["SWE", "SDE", "Backend"],
+                    resources=[
+                        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
+                        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
+                    ],
+                ),
+                CaseSoftwareDesignProblem(
+                    name="Design a Todo List Service",
+                    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
+                    complexity=ProblemComplexity.EASY,
+                    role=["SWE", "SDE", "Backend"],
+                    resources=[
+                        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
+                        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
+                    ],
+                ),
             ]
 
-            
         case _:
             raise ValueError(f"Invalid case type: {case_type}")

@@ -1,7 +1,4 @@
-import os
-from typing import Literal
 from deepagents import create_deep_agent
-from configuration import OPENAI_API_KEY, FIRECRAWL_API_KEY, LANGSMITH_API_KEY, LANGSMITH_ORG_ID
 
 
 def test_tool1():
@@ -9,10 +6,12 @@ def test_tool1():
     print("Testing the tool 1...")
     return 1
 
+
 def test_tool2():
     """test if the tool is working"""
     print("Testing the tool 2...")
     return 2
+
 
 # System prompt to steer the agent to be an expert researcher
 instructions = """You are just a test agent, you have access to the subagent that wuill help you with your tastk. The subagent has access to the following tool:
@@ -48,12 +47,21 @@ subagent2 = {
 subagents = [subagent1, subagent2]
 agent = create_deep_agent(
     model="gpt-4-0613",
-    #tools=[test_tool],
+    # tools=[test_tool],
     subagents=subagents,
-    #system_prompt=instructions
+    # system_prompt=instructions
 )
 
-result = agent.invoke({"messages": [{"role": "user", "content": "Please ask your subagents named 'assistant' and 'assistant2' to call the `test_tool1` and `test_tool2` respectively and return their results. Do NOT call the tools yourself; delegate them to the subagents."}]})
+result = agent.invoke(
+    {
+        "messages": [
+            {
+                "role": "user",
+                "content": "Please ask your subagents named 'assistant' and 'assistant2' to call the `test_tool1` and `test_tool2` respectively and return their results. Do NOT call the tools yourself; delegate them to the subagents.",
+            }
+        ]
+    }
+)
 
 # Print the agent's response
 print(result["messages"][-1].content)

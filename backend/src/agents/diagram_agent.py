@@ -16,10 +16,18 @@ from src.configuration import MIRO_BOARD_ID
 
 class DiagramAnalysis(BaseModel):
     summary: str = Field(description="2-3 sentence overview of the architecture")
-    components: list[str] = Field(description="Identified system components with their roles")
-    connections: list[str] = Field(description="Data flows and relationships between components")
-    potential_issues: list[str] = Field(description="Gaps, missing elements, or architectural concerns")
-    probe_areas: list[str] = Field(description="Specific questions to ask the candidate about their design")
+    components: list[str] = Field(
+        description="Identified system components with their roles"
+    )
+    connections: list[str] = Field(
+        description="Data flows and relationships between components"
+    )
+    potential_issues: list[str] = Field(
+        description="Gaps, missing elements, or architectural concerns"
+    )
+    probe_areas: list[str] = Field(
+        description="Specific questions to ask the candidate about their design"
+    )
 
 
 DIAGRAM_SYSTEM_PROMPT = """You are a senior system design interviewer analyzing a candidate's architecture diagram on a Miro board.
@@ -97,33 +105,42 @@ async def analyze_diagram() -> DiagramAnalysis:
 
     system_prompt = DIAGRAM_SYSTEM_PROMPT.format(board_id=MIRO_BOARD_ID)
 
-    result = await agent.ainvoke({
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {
-                "role": "user",
-                "content": (
-                    "Fetch and analyze the system design diagram on the Miro board. "
-                    "Use the Miro tools to explore the board, list all items, and get context. "
-                    "Then provide a comprehensive analysis of the architecture."
-                ),
-            },
-        ]
-    })
+    result = await agent.ainvoke(
+        {
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {
+                    "role": "user",
+                    "content": (
+                        "Fetch and analyze the system design diagram on the Miro board. "
+                        "Use the Miro tools to explore the board, list all items, and get context. "
+                        "Then provide a comprehensive analysis of the architecture."
+                    ),
+                },
+            ]
+        }
+    )
 
     # Extract the last AI message content
     last_message = result["messages"][-1]
-    content = last_message.content if hasattr(last_message, "content") else str(last_message)
+    content = (
+        last_message.content if hasattr(last_message, "content") else str(last_message)
+    )
     print(f"[diagram_agent] Agent analysis complete ({len(content)} chars)")
 
     # Parse into structured format
     structured_model = model.with_structured_output(DiagramAnalysis)
-    analysis = await structured_model.ainvoke([
-        {"role": "system", "content": "Extract the diagram analysis into the structured format. Be specific and reference actual component names."},
-        {"role": "user", "content": content},
-    ])
+    analysis = await structured_model.ainvoke(
+        [
+            {
+                "role": "system",
+                "content": "Extract the diagram analysis into the structured format. Be specific and reference actual component names.",
+            },
+            {"role": "user", "content": content},
+        ]
+    )
 
-    print(f"[diagram_agent] Structured analysis:")
+    print("[diagram_agent] Structured analysis:")
     print(f"  Summary: {analysis.summary}")
     print(f"  Components: {len(analysis.components)}")
     print(f"  Connections: {len(analysis.connections)}")

@@ -14,7 +14,7 @@ import secrets
 import asyncio
 import webbrowser
 from pathlib import Path
-from urllib.parse import urlencode, urlparse, parse_qs
+from urllib.parse import urlencode
 
 import httpx
 
@@ -112,11 +112,9 @@ async def _run_auth_flow(client_info: dict) -> dict:
     """
     # Generate PKCE values
     code_verifier = secrets.token_urlsafe(64)
-    code_challenge = (
-        hashlib.sha256(code_verifier.encode())
-        .digest()
-    )
+    code_challenge = hashlib.sha256(code_verifier.encode()).digest()
     import base64
+
     code_challenge_b64 = base64.urlsafe_b64encode(code_challenge).rstrip(b"=").decode()
 
     state = secrets.token_urlsafe(32)
@@ -144,17 +142,23 @@ async def _run_auth_flow(client_info: dict) -> dict:
         returned_state = request.query.get("state")
         if returned_state != state:
             captured_error = "State mismatch"
-            return web.Response(text="Error: state mismatch. Close this tab.", status=400)
+            return web.Response(
+                text="Error: state mismatch. Close this tab.", status=400
+            )
 
         error = request.query.get("error")
         if error:
             captured_error = f"{error}: {request.query.get('error_description', '')}"
-            return web.Response(text=f"Error: {captured_error}. Close this tab.", status=400)
+            return web.Response(
+                text=f"Error: {captured_error}. Close this tab.", status=400
+            )
 
         captured_code = request.query.get("code")
         if not captured_code:
             captured_error = "No code in callback"
-            return web.Response(text="Error: no authorization code. Close this tab.", status=400)
+            return web.Response(
+                text="Error: no authorization code. Close this tab.", status=400
+            )
 
         return web.Response(
             text="<html><body><h2>Miro MCP authorized! You can close this tab.</h2></body></html>",
@@ -168,7 +172,7 @@ async def _run_auth_flow(client_info: dict) -> dict:
     site = web.TCPSite(runner, "localhost", CALLBACK_PORT)
     await site.start()
 
-    print(f"[miro_mcp_auth] Opening browser for Miro authorization...")
+    print("[miro_mcp_auth] Opening browser for Miro authorization...")
     print(f"[miro_mcp_auth] If the browser doesn't open, visit: {auth_url}")
     webbrowser.open(auth_url)
 
@@ -187,7 +191,7 @@ async def _run_auth_flow(client_info: dict) -> dict:
 
     # Exchange code for tokens
     tokens = await _exchange_code(client_info, captured_code, code_verifier)
-    print(f"[miro_mcp_auth] Successfully obtained Miro MCP tokens")
+    print("[miro_mcp_auth] Successfully obtained Miro MCP tokens")
     return tokens
 
 
@@ -216,7 +220,10 @@ async def get_miro_mcp_access_token() -> str:
                     "params": {
                         "protocolVersion": "2025-03-26",
                         "capabilities": {},
-                        "clientInfo": {"name": "SystemInterviewAgent", "version": "1.0"},
+                        "clientInfo": {
+                            "name": "SystemInterviewAgent",
+                            "version": "1.0",
+                        },
                     },
                 },
                 timeout=15,

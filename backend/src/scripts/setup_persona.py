@@ -61,9 +61,9 @@ def main():
         return
     data = resp.json()
     persona_id = data.get("persona_id")
-    print(f"Persona created successfully!")
+    print("Persona created successfully!")
     print(f"persona_id: {persona_id}")
-    print(f"\nAdd this to your .env file:")
+    print("\nAdd this to your .env file:")
     print(f"TAVUS_PERSONA_ID={persona_id}")
 
 

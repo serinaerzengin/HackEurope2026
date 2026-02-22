@@ -49,6 +49,7 @@ sessions: dict[str, dict] = {}  # Keyed by session_id
 
 # --- Session Endpoints ---
 
+
 @app.post("/api/interview/session", response_model=SessionResponse)
 def create_session(req: CreateSessionRequest):
     session_id = str(uuid.uuid4())
@@ -89,6 +90,7 @@ async def resume_interview(session_id: str):
     diagram_analysis = None
     try:
         from src.agents.diagram_agent import analyze_diagram
+
         analysis = await analyze_diagram()
         diagram_analysis = analysis.model_dump()
         session["diagram_analysis"] = diagram_analysis
@@ -107,17 +109,25 @@ async def resume_interview(session_id: str):
     # Build enriched context for the new Tavus conversation
     context_parts = [
         f"Original Task:\n{session['task_description']}",
-        f"\nSystem Design Diagram Analysis:",
+        "\nSystem Design Diagram Analysis:",
         f"Summary: {diagram_analysis['summary']}",
     ]
     if diagram_analysis.get("components"):
-        context_parts.append(f"Components identified: {', '.join(diagram_analysis['components'])}")
+        context_parts.append(
+            f"Components identified: {', '.join(diagram_analysis['components'])}"
+        )
     if diagram_analysis.get("connections"):
-        context_parts.append(f"Data flows: {', '.join(diagram_analysis['connections'])}")
+        context_parts.append(
+            f"Data flows: {', '.join(diagram_analysis['connections'])}"
+        )
     if diagram_analysis.get("potential_issues"):
-        context_parts.append(f"Potential issues to probe: {', '.join(diagram_analysis['potential_issues'])}")
+        context_parts.append(
+            f"Potential issues to probe: {', '.join(diagram_analysis['potential_issues'])}"
+        )
     if diagram_analysis.get("probe_areas"):
-        context_parts.append(f"\nInterview guidance — ask about: {', '.join(diagram_analysis['probe_areas'])}")
+        context_parts.append(
+            f"\nInterview guidance — ask about: {', '.join(diagram_analysis['probe_areas'])}"
+        )
 
     context_parts.append(
         "\nInstruction: Ask the candidate to walk through their design. "
@@ -180,6 +190,7 @@ async def end_interview(session_id: str):
 
 # --- Preparation Endpoint ---
 
+
 class PreparationRequest(BaseModel):
     job_description: str
     job_link: str | None = None
@@ -207,6 +218,7 @@ def create_interview_preparation_tasks(req: PreparationRequest):
 
 # --- Utterance Handler ---
 
+
 @app.post("/api/tavus/utterance", response_model=TavusUtteranceResponse)
 def handle_tavus_utterance(req: TavusUtteranceRequest):
     # Determine which history to use: session-based or legacy conversation-based
@@ -219,20 +231,25 @@ def handle_tavus_utterance(req: TavusUtteranceRequest):
             history.append({"role": "system", "content": session["system_prompt"]})
 
         # Track conversation_id in session
-        if req.conversation_id and req.conversation_id not in session["conversation_ids"]:
+        if (
+            req.conversation_id
+            and req.conversation_id not in session["conversation_ids"]
+        ):
             session["conversation_ids"].append(req.conversation_id)
 
         # If we have diagram analysis (discussion phase), add it as context
         if session.get("diagram_analysis") and session["phase"] == "discussion":
             da = session["diagram_analysis"]
-            history.append({
-                "role": "system",
-                "content": (
-                    f"Diagram context — Components: {', '.join(da.get('components', []))}. "
-                    f"Connections: {', '.join(da.get('connections', []))}. "
-                    f"Probe areas: {', '.join(da.get('probe_areas', []))}."
-                ),
-            })
+            history.append(
+                {
+                    "role": "system",
+                    "content": (
+                        f"Diagram context — Components: {', '.join(da.get('components', []))}. "
+                        f"Connections: {', '.join(da.get('connections', []))}. "
+                        f"Probe areas: {', '.join(da.get('probe_areas', []))}."
+                    ),
+                }
+            )
     else:
         if req.conversation_id not in conversation_history:
             conversation_history[req.conversation_id] = []

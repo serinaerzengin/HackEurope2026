@@ -1,4 +1,3 @@
-import json
 from collections import Counter
 from typing import Any
 
@@ -85,6 +84,7 @@ def _extract_item_text(item: dict[str, Any]) -> str | None:
         if val:
             # Strip HTML tags
             import re
+
             clean = re.sub(r"<[^>]+>", "", str(val)).strip()
             if clean:
                 return clean
@@ -130,7 +130,7 @@ def build_miro_description(
         # Shape type (for shape items)
         shape = data.get("shape", "")
 
-        parts = [f"[{i+1}] type={item_type}"]
+        parts = [f"[{i + 1}] type={item_type}"]
         parts.append(f"id={item_id}")
         if shape:
             parts.append(f"shape={shape}")
@@ -165,7 +165,9 @@ def build_miro_description_with_connectors(
     desc = build_miro_description(items)
 
     if not connectors:
-        desc += "\n\n=== CONNECTORS ===\nNo connectors (arrows/lines) found on the board."
+        desc += (
+            "\n\n=== CONNECTORS ===\nNo connectors (arrows/lines) found on the board."
+        )
         return desc
 
     # Build an id->label map for resolving connector endpoints
@@ -189,7 +191,11 @@ def build_miro_description_with_connectors(
         caption = ""
         captions = c.get("captions", []) or []
         if captions:
-            caption = captions[0].get("content", "") if isinstance(captions[0], dict) else str(captions[0])
+            caption = (
+                captions[0].get("content", "")
+                if isinstance(captions[0], dict)
+                else str(captions[0])
+            )
 
         style = c.get("style", {}) or {}
         stroke_style = style.get("strokeStyle", "")

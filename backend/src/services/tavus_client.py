@@ -48,6 +48,8 @@ async def end_conversation(conversation_id: str) -> None:
             if resp.is_success:
                 print(f"[tavus_client] Ended conversation {conversation_id}")
             else:
-                print(f"[tavus_client] End conversation {conversation_id} returned {resp.status_code}: {resp.text}")
+                print(
+                    f"[tavus_client] End conversation {conversation_id} returned {resp.status_code}: {resp.text}"
+                )
     except Exception as e:
         print(f"[tavus_client] Failed to end conversation {conversation_id}: {e}")

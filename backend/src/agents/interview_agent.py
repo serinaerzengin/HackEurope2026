@@ -1,14 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
-import json
-from deepagents import create_deep_agent
 from src.types.dto import TavusUtteranceResponse, InterviewReport
-from src.configuration import (
-    OPENAI_API_KEY,
-    FIRECRAWL_API_KEY,
-    LANGSMITH_API_KEY,
-    LANGSMITH_ORG_ID,
-)
 from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 
@@ -162,20 +154,24 @@ def generate_report(
 
     # Add diagram analysis context if available
     if diagram_analysis:
-        messages.append({
-            "role": "system",
-            "content": f"""Diagram Analysis from the candidate's Miro board:
-Summary: {diagram_analysis.get('summary', 'N/A')}
-Components: {', '.join(diagram_analysis.get('components', []))}
-Connections: {', '.join(diagram_analysis.get('connections', []))}
-Potential Issues Found: {', '.join(diagram_analysis.get('potential_issues', []))}
+        messages.append(
+            {
+                "role": "system",
+                "content": f"""Diagram Analysis from the candidate's Miro board:
+Summary: {diagram_analysis.get("summary", "N/A")}
+Components: {", ".join(diagram_analysis.get("components", []))}
+Connections: {", ".join(diagram_analysis.get("connections", []))}
+Potential Issues Found: {", ".join(diagram_analysis.get("potential_issues", []))}
 """,
-        })
+            }
+        )
 
-    messages.append({
-        "role": "user",
-        "content": "Generate a comprehensive interview evaluation report based on the full conversation above.",
-    })
+    messages.append(
+        {
+            "role": "user",
+            "content": "Generate a comprehensive interview evaluation report based on the full conversation above.",
+        }
+    )
 
     result = report_agent.invoke({"messages": messages})
     return result["structured_response"]
