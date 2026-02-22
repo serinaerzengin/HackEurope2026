@@ -6,7 +6,7 @@ from src.api.routes.interview import router as interview_router
 from src.api.routes.tavus import router as tavus_router
 from src.types.dto import InterviewStartResponse, TavusUtteranceResponse
 from src.services.interview_preperation import generate_system_prompt, recommend_case
-from src.agents.interviewer import run_agent
+from src.agents.interview_agent import run_agent
 
 load_dotenv()
 
@@ -77,5 +77,8 @@ if __name__ == "__main__":
     # check if the database is empty, if so, run the ingestion service
     # Run ingestion service to populate the database with initial data
 
+    response = run_agent([])
+    print(type(response))
+    print(response)
     #
-    pass
+    
