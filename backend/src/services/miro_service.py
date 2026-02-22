@@ -50,7 +50,7 @@ def fetch_all_board_items(board_id: str, limit: int = 50) -> list[dict[str, Any]
 
 
 def build_miro_description(
-    items: list[dict[str, Any]], max_text_items: int = 50
+    items: list[dict[str, Any]], max_text_items: int = 5000
 ) -> str:
     """
     Creates a compact description from board items.
