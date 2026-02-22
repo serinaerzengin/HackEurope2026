@@ -2,7 +2,7 @@
 
 **Intervox** is an AI interviewer that feels real. It watches your code, reads your diagrams, challenges your decisions, and scores your performance so you can practice technical interviews under real pressure and walk into FAANG unshakable.
 
-Intervox challenges you with **data structures & algorithms (DSA)** problems in an integrated coding environment and guides you through **system design** scenarios. Beyond solving problems, Intervox evaluates **how you think**: it analyzes time/space complexity, reviews code readability, suggests refactors, and pushes you to spot and fix bugs. Each session ends with structured scoring across **communication, problem-solving, system design, and code quality**, including a hire/no-hire style verdict and actionable improvement steps.
+Intervox challenges you with **data structures & algorithms (DSA)** problems in an integrated coding environment and guides you through **system design** scenarios. Beyond solving problems, Intervox evaluates **how you think**: it analyzes time/space complexity, reviews code readability, suggests refactors, and pushes you to spot and fix bugs. Each session ends with structured scoring across **communication, problem-solving, system design, and code quality**,  and actionable improvement steps.
 
 ---
 
