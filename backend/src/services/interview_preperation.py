@@ -6,16 +6,22 @@ from langchain_openai import ChatOpenAI
 
 from src.types.cases import CaseType
 from src.db.dao import fetch_cases_from_db
+from src.configuration import OPENAI_API_KEY
 
 # Lightweight, reusable chain to keep latency low
-_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=10)
+_llm = ChatOpenAI(
+    api_key=OPENAI_API_KEY, model="gpt-4o-mini", temperature=0, timeout=10
+)
 _prompt = ChatPromptTemplate.from_template(
     """
-You are configuring a mock technical interviewer. Craft a concise system prompt (max 120 words) that:
+You are configuring a mock technical interviewer. Craft a concise system prompt (max 150 words) that:
 - Sets a friendly, professional, coaching tone.
 - References the company {company} and key needs from the job description.
 - Highlights up to three focus areas inferred from: {job_description}
-- You are going to test the user on the following cases: {cases}. Go through each case and identify the key skills being tested, then weave those into the system prompt to guide the interviewer's questioning style. For example, if a case tests dynamic programming, the prompt might say "Ask questions that probe for dynamic programming insights." If another case tests system design, the prompt might add "Encourage the candidate to think through system design trade-offs."
+- You are going to test the user on the following cases: {cases}.
+- Choose one of the cases and describe the task for the user to solve in a clear and engaging way, as you would present it during an interview. Make sure to include any relevant details from the case to set the context for the candidate.
+
+Go through each case and identify the key skills being tested, then weave those into the system prompt to guide the interviewer's questioning style. For example, if a case tests dynamic programming, the prompt might say "Ask questions that probe for dynamic programming insights." If another case tests system design, the prompt might add "Encourage the candidate to think through system design trade-offs."
 Respond with only the system prompt text.
     """
 )
