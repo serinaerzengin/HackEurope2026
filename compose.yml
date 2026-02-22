@@ -3,6 +3,17 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - LANGSMITH_PROJECT=${LANGSMITH_PROJECT}
+      - PAID_API_KEY=${PAID_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      - TAVUS_API_KEY=${TAVUS_API_KEY}
+      - TAVUS_PERSONA_ID=${TAVUS_PERSONA_ID}
+      - TAVUS_REPLICA_ID=${TAVUS_REPLICA_ID}
+
   db:
     image: "postgres:13"
 
