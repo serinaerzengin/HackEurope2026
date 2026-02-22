@@ -11,7 +11,11 @@ from src.types.dto import (
     TavusUtteranceRequest,
 )
 from src.services.interview_preperation import generate_system_prompt, recommend_case
+<<<<<<< Updated upstream
 from src.agents.interview_agent import run_agent
+=======
+from src.agents.interviewer import run_agent
+>>>>>>> Stashed changes
 
 load_dotenv()
 
@@ -61,22 +65,11 @@ def create_interview_preparation_tasks(req: PreparationRequest):
 
 @app.post("/api/tavus/utterance", response_model=TavusUtteranceResponse)
 def handle_tavus_utterance(req: TavusUtteranceRequest):
-    # TODO: Integrate with the agent chain for real responses.
-    # For now, return a stub echo response so the loop can be tested end-to-end.
-    print(f"Received utterance from Tavus: {req.utterance}")
-    return TavusUtteranceResponse(
-        response=f"I heard you say: {req.utterance}",
-        feedback=[
-            "Great answer!",
-            "Consider optimizing your solution for time complexity.",
-        ],
-        possible_follow_ups=[
-            "Can you explain your thought process?",
-            "What is the time complexity of your solution?",
-        ],
-        clarity_score=7,
-        correctness="pending",
-    )
+    history = []
+    history.append(req.model_dump())
+    response = run_agent(history)
+
+    return response
 
 
 if __name__ == "__main__":
