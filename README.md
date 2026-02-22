@@ -4,6 +4,7 @@
 
 Intervox challenges you with **data structures & algorithms (DSA)** problems in an integrated coding environment and guides you through **system design** scenarios. Beyond solving problems, Intervox evaluates **how you think**: it analyzes time/space complexity, reviews code readability, suggests refactors, and pushes you to spot and fix bugs. Each session ends with structured scoring across **communication, problem-solving, system design, and code quality**,  and actionable improvement steps.
 
+[![Intervox Interview Demo](https://img.youtube.com/vi/6jwu4PHOyP0/0.jpg)](https://youtu.be/6jwu4PHOyP0)
 ---
 
 ## Features
