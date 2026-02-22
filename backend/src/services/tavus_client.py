@@ -31,3 +31,23 @@ async def create_conversation(
             print(f"[tavus_client] Error {resp.status_code}: {resp.text}")
         resp.raise_for_status()
         return resp.json()
+
+
+async def end_conversation(conversation_id: str) -> None:
+    """End a Tavus conversation. Swallows errors so callers don't crash."""
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.delete(
+                f"{TAVUS_API_BASE}/conversations/{conversation_id}",
+                headers={
+                    "x-api-key": TAVUS_API_KEY,
+                    "Content-Type": "application/json",
+                },
+                timeout=15.0,
+            )
+            if resp.is_success:
+                print(f"[tavus_client] Ended conversation {conversation_id}")
+            else:
+                print(f"[tavus_client] End conversation {conversation_id} returned {resp.status_code}: {resp.text}")
+    except Exception as e:
+        print(f"[tavus_client] Failed to end conversation {conversation_id}: {e}")

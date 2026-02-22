@@ -44,26 +44,27 @@ def fetch_cases_from_db(
             # Fetch software design cases from the database and return them as a list of ExtractDesignSchema
             return [
                 CaseSoftwareDesignProblem(
-                    name="Design a URL Shortener",
-                    description="Design a URL shortening service like bit.ly. The service should take a long URL and return a shortened version of it. The shortened URL should redirect to the original long URL when accessed.",
-                    complexity=ProblemComplexity.MEDIUM,
-                    role=["SWE", "SDE", "Backend"],
-                    resources=[
-                        "https://www.youtube.com/watch?v=QjYq5uYbY8w",
-                        "https://www.youtube.com/watch?v=HqP9rJQZt3k",
-                        "https://www.youtube.com/watch?v=0sTQeXoXKjE",
-                    ],
-                ),
-                CaseSoftwareDesignProblem(
-                    name="Design a Pastebin",
-                    description="Design a Pastebin like service where users can paste text and get a unique URL to share it. The service should support expiration times, syntax highlighting, and custom URLs.",
-                    complexity=ProblemComplexity.MEDIUM,
-                    role=["SWE", "SDE", "Backend"],
-                    resources=[
-                        "https://www.youtube.com/watch?v=joDQuyGWueE",
-                        "https://www.youtube.com/watch?v=Ks9fS2_uI6M",
-                    ],
-                ),
+    name="Design a Todo List Service",
+    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
+    complexity=ProblemComplexity.EASY,
+    role=["SWE", "SDE", "Backend"],
+    resources=[
+        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
+        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
+    ],
+),
+         CaseSoftwareDesignProblem(
+    name="Design a Todo List Service",
+    description="Design a simple Todo List service where users can create tasks, update task details, mark tasks as completed, delete tasks, and view their task list. The service should support basic filtering (all, active, completed) and simple due dates.",
+    complexity=ProblemComplexity.EASY,
+    role=["SWE", "SDE", "Backend"],
+    resources=[
+        "https://www.youtube.com/watch?v=7Vf-H9q1uxU",
+        "https://www.youtube.com/watch?v=1K0xQGbEAFA",
+    ],
+),
             ]
+
+            
         case _:
             raise ValueError(f"Invalid case type: {case_type}")

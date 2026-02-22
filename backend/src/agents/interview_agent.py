@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List
 import json
 from deepagents import create_deep_agent
-from src.types.dto import TavusUtteranceResponse
+from src.types.dto import TavusUtteranceResponse, InterviewReport
 from src.configuration import (
     OPENAI_API_KEY,
     FIRECRAWL_API_KEY,
@@ -126,3 +126,56 @@ def run_agent(history: list[dict]) -> TavusUtteranceResponse:
     # ---- 6. Combine into Tavus DTO
 
     return final_data
+
+
+# --- Report Agent ---
+
+report_agent = create_agent(
+    model=model,
+    system_prompt="""You are evaluating a complete technical interview. Consider all aspects:
+
+1. **Communication**: How clearly did the candidate explain their thinking? Did they ask good clarifying questions?
+2. **Technical Correctness**: Were their answers technically sound? Did they demonstrate deep understanding?
+3. **System Design Quality**: If a diagram analysis is provided, evaluate the architecture — component choices, data flows, scalability considerations, trade-offs discussed.
+4. **Problem-Solving**: Did they break down the problem well? Did they consider edge cases?
+
+Provide:
+- An overall score (0-10)
+- Communication score (0-10)
+- Technical score (0-10)
+- Specific strengths (be concrete, reference what they said/did)
+- Specific weaknesses (be constructive, suggest improvements)
+- Detailed feedback paragraph
+- If diagram analysis is available, provide diagram-specific feedback
+""",
+    tools=[],
+    response_format=InterviewReport,
+)
+
+
+def generate_report(
+    history: list[dict],
+    diagram_analysis: dict | None = None,
+) -> InterviewReport:
+    """Generate a comprehensive interview report from conversation history and optional diagram analysis."""
+    messages = list(history)
+
+    # Add diagram analysis context if available
+    if diagram_analysis:
+        messages.append({
+            "role": "system",
+            "content": f"""Diagram Analysis from the candidate's Miro board:
+Summary: {diagram_analysis.get('summary', 'N/A')}
+Components: {', '.join(diagram_analysis.get('components', []))}
+Connections: {', '.join(diagram_analysis.get('connections', []))}
+Potential Issues Found: {', '.join(diagram_analysis.get('potential_issues', []))}
+""",
+        })
+
+    messages.append({
+        "role": "user",
+        "content": "Generate a comprehensive interview evaluation report based on the full conversation above.",
+    })
+
+    result = report_agent.invoke({"messages": messages})
+    return result["structured_response"]
