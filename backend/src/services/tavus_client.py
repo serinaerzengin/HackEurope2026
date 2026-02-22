@@ -27,5 +27,7 @@ async def create_conversation(
             },
             timeout=30.0,
         )
+        if not resp.is_success:
+            print(f"[tavus_client] Error {resp.status_code}: {resp.text}")
         resp.raise_for_status()
         return resp.json()

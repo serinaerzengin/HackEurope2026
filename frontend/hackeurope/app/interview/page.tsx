@@ -117,24 +117,37 @@ export default function InterviewPage() {
         <h1 className="text-lg font-semibold">{label} Interview</h1>
       </header>
 
-      <div className="flex-1 relative">
-        {pageState === "loading" && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-zinc-400 animate-pulse">
-              Preparing your interview...
-            </p>
-          </div>
-        )}
-        {pageState === "active" && conversationUrl && callObject && (
-          <DailyProvider callObject={callObject}>
-            <DailyAudio />
-            <InterviewRoom
-              conversationUrl={conversationUrl}
-              conversationId={conversationId}
-              onEnd={() => setPageState("ended")}
-            />
-          </DailyProvider>
-        )}
+      <div className="flex-1 flex min-h-0">
+        {/* Left side — Miro whiteboard */}
+        <div className="w-1/2 border-r border-zinc-800">
+          <iframe
+            src="https://miro.com/app/live-embed/uXjVG8tjZTw=/?moveToViewport=-698,-388,1354,846&embedId=236013957724"
+            className="w-full h-full border-0"
+            allow="fullscreen; clipboard-read; clipboard-write"
+            allowFullScreen
+          />
+        </div>
+
+        {/* Right side — Interview room */}
+        <div className="w-1/2 relative">
+          {pageState === "loading" && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-zinc-400 animate-pulse">
+                Preparing your interview...
+              </p>
+            </div>
+          )}
+          {pageState === "active" && conversationUrl && callObject && (
+            <DailyProvider callObject={callObject}>
+              <DailyAudio />
+              <InterviewRoom
+                conversationUrl={conversationUrl}
+                conversationId={conversationId}
+                onEnd={() => setPageState("ended")}
+              />
+            </DailyProvider>
+          )}
+        </div>
       </div>
     </div>
   );
