@@ -3,7 +3,7 @@
 
 Looking at the sequence diagram of entire interview flow, we can identify the main components and their interactions. The architecture is designed to be modular, scalable, and maintainable. 
 
-![Sequence Diagram](../docs/sequence_diagram.md) 
+![Sequence Diagram](https://github.com/serinaerzengin/HackEurope2026/blob/main/docs/sequence-diagram.png) 
 ## Technology Stack
 
 ### Backend
