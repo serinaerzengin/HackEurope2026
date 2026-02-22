@@ -40,4 +40,5 @@ jobs:
 
             - name: Install and sync dependencies
               run: |
+                  cd backend
                   uv sync --locked --all-extras
