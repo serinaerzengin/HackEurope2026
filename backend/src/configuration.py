@@ -15,3 +15,6 @@ LANGSMITH_ORG_ID = os.getenv("LANGSMITH_ORG_ID")
 TAVUS_API_KEY = os.getenv("TAVUS_API_KEY")
 TAVUS_PERSONA_ID = os.getenv("TAVUS_PERSONA_ID")
 TAVUS_REPLICA_ID = os.getenv("TAVUS_REPLICA_ID", "r5dc7c7d0bcb")
+
+MIRO_BOARD_ID = os.getenv("MIRO_BOARD_ID")
+MIRO_ACCESS_TOKEN = os.getenv("MIRO_ACCESS_TOKEN")  # set this in your environment
