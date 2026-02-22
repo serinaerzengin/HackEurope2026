@@ -132,6 +132,6 @@ Then open **[http://localhost:3000](http://localhost:3000)**.
 
 ## Documentation
 
-* **Architecture**: `docs/architectural_design.md`
+* [**Architecture Design**](docs/architectural_design.md)
 * **API Docs (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs) (when running locally)
 
