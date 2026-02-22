@@ -27,3 +27,8 @@ services:
 
     volumes:
       - ./db-data/:/var/lib/postgresql/data/
+
+  client:
+    build: ./frontend/hackeurope
+    ports:
+      - "3000:3000"
