@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from src.api.routes.interview import router as interview_router
 from src.api.routes.tavus import router as tavus_router
-from src.types.dto import InterviewStartResponse, TavusUtteranceResponse
+from src.types.dto import (
+    InterviewStartResponse,
+    TavusUtteranceResponse,
+    TavusUtteranceRequest,
+)
 from src.services.interview_preperation import generate_system_prompt, recommend_case
 from src.agents.interview_agent import run_agent
 
@@ -28,49 +33,50 @@ def health():
     return {"status": "ok"}
 
 
-@app.post("/api/interview/preparation", response_model=InterviewStartResponse)
-def create_interview_preparation_tasks(
-    job_description: str, job_link: str | None = None, task_type: str = "dsa"
-):
-    """
-    Create the initial narration of interview preparation tasks based on the job description and job link (if provided). The task type can be either "dsa" or "design".
-    Args:
-        job_description (str): The job description to analyze for creating interview preparation tasks.
-        job_link (str | None): An optional link to the job posting for additional context.
-        task_type (str): The type of tasks to create, either "dsa" for data structures and algorithms or "design" for software design problems. Default is "dsa".
-    Returns:
-        InterviewStartResponse: The generated interview preparation tasks.
-    """
+class PreparationRequest(BaseModel):
+    job_description: str
+    job_link: str | None = None
+    task_type: str = "dsa"
 
-    # TODO FIND A WAY TO EXTRACT THE COMPANY NAME FROM THE JOB DESCRIPTION OR JOB LINK USING THE LLM SERVICE. For now, we are hardcoding it to "Google" for testing purposes.
+
+@app.post("/api/interview/preparation", response_model=InterviewStartResponse)
+def create_interview_preparation_tasks(req: PreparationRequest):
+    # TODO: Extract company name from job description/link via LLM. Hardcoded for now.
     company_name = "Google"
 
     cases = recommend_case(
-        company=company_name, job_description=job_description, task_type=task_type
+        company=company_name,
+        job_description=req.job_description,
+        task_type=req.task_type,
     )
     system_prompt = generate_system_prompt(
-        company=company_name, job_description=job_description, cases=cases
+        company=company_name, job_description=req.job_description, cases=cases
     )
 
-    interview_response = InterviewStartResponse(
+    return InterviewStartResponse(
         system_prompt=system_prompt,
         cases=cases,
     )
-    return interview_response
-
-
-# TODO: Implement the API endpoint for handling Tavus uterences and role of who is talking (interviewer or interviewee) and return the appropriate response based on the role and the content of the utterance. This will involve integrating with the LLM service to generate responses based on the context of the conversation and the interview preparation tasks.
 
 
 @app.post("/api/tavus/utterance", response_model=TavusUtteranceResponse)
-def handle_tavus_utterance(utterance: str, role: str):
-    history = []
-    # role is either ""
-    history.append({"role": role, "content": utterance})
-
-    # TODO: start the agent chain to handle the utterance and generate a response based on the role and the content of the utterance. The agent chain should also update the history of the conversation for context in future interactions.
-    response = run_agent(history)
-    return response
+def handle_tavus_utterance(req: TavusUtteranceRequest):
+    # TODO: Integrate with the agent chain for real responses.
+    # For now, return a stub echo response so the loop can be tested end-to-end.
+    print(f"Received utterance from Tavus: {req.utterance}")
+    return TavusUtteranceResponse(
+        response=f"I heard you say: {req.utterance}",
+        feedback=[
+            "Great answer!",
+            "Consider optimizing your solution for time complexity.",
+        ],
+        possible_follow_ups=[
+            "Can you explain your thought process?",
+            "What is the time complexity of your solution?",
+        ],
+        clarity_score=7,
+        correctness="pending",
+    )
 
 
 if __name__ == "__main__":

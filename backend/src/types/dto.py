@@ -11,6 +11,12 @@ class InterviewStartResponse(BaseModel):
     cases: list[CaseDSAProblem | CaseSoftwareDesignProblem]
 
 
+class TavusUtteranceRequest(BaseModel):
+    utterance: str
+    role: str  # "user" or "replica"
+    conversation_id: str
+
+
 class TavusUtteranceResponse(BaseModel):
     response: str
     feedback: list[str] | None = None

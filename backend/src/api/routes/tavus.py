@@ -10,6 +10,7 @@ router = APIRouter()
 
 class ConversationRequest(BaseModel):
     interview_type: str
+    system_prompt: str | None = None
 
 
 class ConversationResponse(BaseModel):
@@ -19,27 +20,36 @@ class ConversationResponse(BaseModel):
 
 @router.post("/tavus/conversation", response_model=ConversationResponse)
 async def start_conversation(req: ConversationRequest):
-    task = MOCK_TASKS.get(req.interview_type)
-    if not task:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unknown interview type: {req.interview_type}. Must be 'coding' or 'system-design'.",
+    # If a system_prompt is provided (from preparation endpoint), use it directly
+    if req.system_prompt:
+        context = req.system_prompt
+        greeting = (
+            f"Hi! Welcome to your {req.interview_type.replace('-', ' ')} interview. "
+            f"I've prepared some tasks for you. Are you ready to get started?"
         )
+    else:
+        # Fall back to mock task behavior
+        task = MOCK_TASKS.get(req.interview_type)
+        if not task:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown interview type: {req.interview_type}. Must be 'coding' or 'system-design'.",
+            )
 
-    context = (
-        f"Interview type: {req.interview_type}\n"
-        f"Task: {task['title']}\n"
-        f"Description: {task['description']}\n"
-    )
-    if "difficulty" in task:
-        context += f"Difficulty: {task['difficulty']}\n"
-    if "complexity" in task:
-        context += f"Complexity: {task['complexity']}\n"
+        context = (
+            f"Interview type: {req.interview_type}\n"
+            f"Task: {task['title']}\n"
+            f"Description: {task['description']}\n"
+        )
+        if "difficulty" in task:
+            context += f"Difficulty: {task['difficulty']}\n"
+        if "complexity" in task:
+            context += f"Complexity: {task['complexity']}\n"
 
-    greeting = (
-        f"Hi! Welcome to your {req.interview_type.replace('-', ' ')} interview. "
-        f"Today we'll be working on: {task['title']}. Are you ready to get started?"
-    )
+        greeting = (
+            f"Hi! Welcome to your {req.interview_type.replace('-', ' ')} interview. "
+            f"Today we'll be working on: {task['title']}. Are you ready to get started?"
+        )
 
     try:
         result = await create_conversation(
