@@ -9,13 +9,17 @@ import { sendUtterance } from "@/lib/api";
 type InterviewRoomProps = {
   conversationUrl: string;
   conversationId: string;
+  sessionId?: string;
   onEnd: () => void;
+  onPause?: () => void;
 };
 
 export default function InterviewRoom({
   conversationUrl,
   conversationId,
+  sessionId,
   onEnd,
+  onPause,
 }: InterviewRoomProps) {
   const { joinCall, leaveCall } = useCVICall();
   const sendMessage = useSendAppMessage();
@@ -37,7 +41,7 @@ export default function InterviewRoom({
       // Only process user utterances — send to backend for a response
       if (role === "user" && speech.trim()) {
         try {
-          const result = await sendUtterance(speech, role, conversationId);
+          const result = await sendUtterance(speech, role, conversationId, sessionId);
           console.log("[backend response]", result.response);
 
           // Echo the backend response through the Tavus avatar
@@ -56,7 +60,7 @@ export default function InterviewRoom({
         }
       }
     },
-    [conversationId, sendMessage],
+    [conversationId, sessionId, sendMessage],
   );
 
   useObservableEvent(handleEvent);
@@ -65,6 +69,11 @@ export default function InterviewRoom({
     await leaveCall();
     onEnd();
   }, [leaveCall, onEnd]);
+
+  const handlePause = useCallback(async () => {
+    await leaveCall();
+    onPause?.();
+  }, [leaveCall, onPause]);
 
   const replicaId = remoteParticipantIds[0];
 
@@ -98,7 +107,15 @@ export default function InterviewRoom({
         )}
       </div>
 
-      <div className="flex justify-center py-4">
+      <div className="flex justify-center gap-3 py-4">
+        {onPause && (
+          <button
+            onClick={handlePause}
+            className="px-6 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-700 transition"
+          >
+            Pause — Draw on Miro
+          </button>
+        )}
         <button
           onClick={handleEnd}
           className="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition"

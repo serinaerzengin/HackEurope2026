@@ -9,6 +9,7 @@ dependencies = [
     "fastapi[standard]>=0.115",
     "firecrawl>=4.16.0",
     "langchain>=1.2.10",
+    "langchain-mcp-adapters>=0.1.0",
     "langchain-openai>=1.1.10",
     "langgraph>=1.0.9",
     "langsmith[openai-agents]>=0.7.6",
@@ -16,6 +17,7 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "uvicorn>=0.30",
     "httpx>=0.27",
+    "aiohttp>=3.13.3",
 ]
 
 [tool.setuptools.packages.find]
