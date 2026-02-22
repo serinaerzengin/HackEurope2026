@@ -1,8 +1,21 @@
 # HackEurope2026
 
-Intervox is an AI interviewer that feels real. It watches your code, reads your diagrams, challenges your decisions, and scores your performance so you can practice technical interviews under real pressure and walk into FAANG unshakable.
+**Intervox** is an AI interviewer that feels real. It watches your code, reads your diagrams, challenges your decisions, and scores your performance so you can practice technical interviews under real pressure and walk into FAANG unshakable.
+
+Intervox challenges you with **data structures & algorithms (DSA)** problems in an integrated coding environment and guides you through **system design** scenarios. Beyond solving problems, Intervox evaluates **how you think**: it analyzes time/space complexity, reviews code readability, suggests refactors, and pushes you to spot and fix bugs. Each session ends with structured scoring across **communication, problem-solving, system design, and code quality**, including a hire/no-hire style verdict and actionable improvement steps.
 
 
+## Features
+
+- **Real-time interview experience** (voice/video supported)
+- **DSA coding challenges** with feedback and follow-ups
+- **System design interviews** with live probing and scaling questions
+- **Diagram/drawing support** for architecture solutions
+- **Automated evaluation**: complexity, clarity, code quality, tradeoffs
+- **Session summary report** with scores + targeted next steps
+- **Company/job-context mode**: tailor interview style using job description + context
+
+---
 ## Setup
 
 ### Prerequisites
@@ -81,6 +94,5 @@ There is also swagger documentation available for the backend API at http://loca
 
 ## 📖 Documentations
 
-- [Developer Setup Guide](docs/manuals/setup)
 - [Architecture](docs/architectural_design.md)
 - [Swagger API Documentation](http://localhost:8000/docs) (when running locally)
