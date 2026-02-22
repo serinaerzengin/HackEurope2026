@@ -1,50 +1,18 @@
 # HackEurope2026
 
-AI-powered technical interview simulator with a live video avatar (Tavus CVI).
+Intervox is an AI interviewer that feels real. It watches your code, reads your diagrams, challenges your decisions, and scores your performance so you can practice technical interviews under real pressure and walk into FAANG unshakable.
 
-## Project Structure
-
-```
-backend/
-├── main.py                  # FastAPI app, CORS, router registration
-├── configuration.py         # Env var loading (API keys, Tavus config)
-├── pyproject.toml           # Python dependencies
-├── .env.example             # Template — copy to .env and fill in keys
-├── api/routes/
-│   ├── interview.py         # POST /api/interview/chat (text-based)
-│   └── tavus.py             # POST /api/tavus/conversation (video interview)
-├── agents/
-│   └── interviewer.py       # System prompt + Claude call
-├── services/
-│   ├── tavus_client.py      # Async Tavus API client (create conversation)
-│   └── mock_tasks.py        # Hardcoded interview tasks (coding, system-design)
-├── scripts/
-│   └── setup_persona.py     # One-time script to create Tavus persona
-├── db/                      # Database module (future)
-├── evaluation/              # Evaluation module (future)
-└── ingestion_service.py     # Web crawling / content extraction (Firecrawl)
-
-frontend/hackeurope/
-├── app/
-│   ├── page.tsx             # Landing page — pick interview type
-│   └── interview/
-│       └── page.tsx         # Video interview page (Tavus iframe)
-├── components/
-│   ├── ChatWindow.tsx       # Text chat message bubbles
-│   ├── MessageInput.tsx     # Text input + send button
-│   ├── nav-dock.tsx         # Navigation dock
-│   └── ui/                  # Shared UI components
-└── lib/
-    ├── api.ts               # API helpers (sendMessage, createConversation)
-    └── utils.ts             # Utility functions
-```
 
 ## Setup
 
 ### Prerequisites
 
-- Python 3.12+, [uv](https://docs.astral.sh/uv/)
-- Node.js 18+, [pnpm](https://pnpm.io/)
+
+- **Git**: Ensure that git is installed on your machine. [Download Git](https://git-scm.com/downloads)
+- **Python 3.12+**: Required for the project. [Download Python](https://www.python.org/downloads/)
+- **UV**: Used for managing Python environments. [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **Node.js 18+**, Ensure that you have pnpm installed. [Install pnpm](https://pnpm.io/)
+- **Docker** (optional): For DevContainer development. [Download Docker](https://www.docker.com/products/docker-desktop)
 
 ### Backend
 
@@ -63,6 +31,7 @@ pnpm install
 
 ### Environment Variables
 
+Copy `.env.example` to `.env` and fill in the required API keys:
 Edit `backend/.env` with:
 
 | Variable | Description |
@@ -83,7 +52,10 @@ uv run -m scripts.setup_persona
 
 Copy the printed `persona_id` into `backend/.env` as `TAVUS_PERSONA_ID`.
 
-## Running
+## Usage
+
+To run the application locally one of two ways:
+
 
 ```bash
 # Backend (terminal 1)
@@ -95,10 +67,20 @@ cd frontend/hackeurope
 pnpm dev
 ```
 
-Or with Docker:
+Using Docker Compose:
 
 ```bash
 docker compose up --build
 ```
 
 Then open http://localhost:3000, pick an interview type, and start your mock interview.
+
+There is also swagger documentation available for the backend API at http://localhost:8000/docs.
+
+
+
+## 📖 Documentations
+
+- [Developer Setup Guide](docs/manuals/setup)
+- [Architecture](docs/architectural_design.md)
+- [Swagger API Documentation](http://localhost:8000/docs) (when running locally)
