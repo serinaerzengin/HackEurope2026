@@ -14,49 +14,6 @@ from langchain.chat_models import init_chat_model
 
 model = init_chat_model("gpt-4.1", temperature=0)
 
-# Mock conversation history for testing
-mock_history = [
-    {
-        "role": "assistant",
-        "content": "Can you tell me about your previous work experience?",
-    },
-    {
-        "role": "user",
-        "content": "I worked as a software developer at XYZ Corp for three years, where I developed various applications.",
-    },
-    {"role": "assistant", "content": "What technologies did you use in your projects?"},
-    {
-        "role": "user",
-        "content": "I primarily used Python and JavaScript, along with frameworks like Django and React.",
-    },
-    {"role": "assistant", "content": "How do you handle tight deadlines?"},
-    {
-        "role": "user",
-        "content": "I prioritize tasks and communicate with my team to ensure we meet our goals.",
-    },
-    {
-        "role": "assistant",
-        "content": "Can you give an example of a challenging project you worked on?",
-    },
-    {
-        "role": "user",
-        "content": "Sure, I worked on a project that required integrating multiple APIs, which was quite challenging but rewarding.",
-    },
-    {"role": "assistant", "content": "What do you think is your greatest strength?"},
-    {
-        "role": "user",
-        "content": "I believe my greatest strength is my problem-solving ability.",
-    },
-    {
-        "role": "assistant",
-        "content": "Thank you for sharing. Do you have any questions for me?",
-    },
-    {
-        "role": "user",
-        "content": "Yes, could you tell me more about the team I would be working with?",
-    },
-]
-
 
 class ClarityScore(BaseModel):
     clarity_score: float = Field(ge=0, le=10)
