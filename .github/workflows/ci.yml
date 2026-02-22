@@ -33,9 +33,9 @@ jobs:
 
             - name: Run pre-commit hooks (optional)
               run: |
-              cd backend
-              uv pip install --system pre-commit
-                  pre-commit run --all-files || true
+                  cd backend
+                  uv pip install --system pre-commit
+                    pre-commit run --all-files || true
               continue-on-error: true
 
             - name: Install and sync dependencies
