@@ -11,11 +11,7 @@ from src.types.dto import (
     TavusUtteranceRequest,
 )
 from src.services.interview_preperation import generate_system_prompt, recommend_case
-<<<<<<< Updated upstream
 from src.agents.interview_agent import run_agent
-=======
-from src.agents.interviewer import run_agent
->>>>>>> Stashed changes
 
 load_dotenv()
 
@@ -35,6 +31,9 @@ app.include_router(tavus_router, prefix="/api")
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+
+conversation_history = {}  # In-memory store for conversation history, keyed by conversation_id
 
 
 class PreparationRequest(BaseModel):
@@ -65,8 +64,15 @@ def create_interview_preparation_tasks(req: PreparationRequest):
 
 @app.post("/api/tavus/utterance", response_model=TavusUtteranceResponse)
 def handle_tavus_utterance(req: TavusUtteranceRequest):
-    history = []
-    history.append(req.model_dump())
+    if req.conversation_id not in conversation_history:
+        conversation_history[req.conversation_id] = []
+
+    history = conversation_history[req.conversation_id]
+    # lookup the conv id to find history
+    history.append({"role": "user", "content": req.utterance})
+    conversation_history[req.conversation_id].append(
+        {"role": "assistant", "content": req.utterance}
+    )
     response = run_agent(history)
 
     return response
@@ -80,4 +86,3 @@ if __name__ == "__main__":
     print(type(response))
     print(response)
     #
-    
