@@ -5,7 +5,11 @@ from dotenv import load_dotenv
 
 from src.api.routes.interview import router as interview_router
 from src.api.routes.tavus import router as tavus_router
-from src.types.dto import InterviewStartResponse, TavusUtteranceResponse, TavusUtteranceRequest
+from src.types.dto import (
+    InterviewStartResponse,
+    TavusUtteranceResponse,
+    TavusUtteranceRequest,
+)
 from src.services.interview_preperation import generate_system_prompt, recommend_case
 
 load_dotenv()
@@ -40,7 +44,9 @@ def create_interview_preparation_tasks(req: PreparationRequest):
     company_name = "Google"
 
     cases = recommend_case(
-        company=company_name, job_description=req.job_description, task_type=req.task_type
+        company=company_name,
+        job_description=req.job_description,
+        task_type=req.task_type,
     )
     system_prompt = generate_system_prompt(
         company=company_name, job_description=req.job_description, cases=cases
@@ -59,8 +65,14 @@ def handle_tavus_utterance(req: TavusUtteranceRequest):
     print(f"Received utterance from Tavus: {req.utterance}")
     return TavusUtteranceResponse(
         response=f"I heard you say: {req.utterance}",
-        feedback=["Great answer!", "Consider optimizing your solution for time complexity."],
-        possible_follow_ups=["Can you explain your thought process?", "What is the time complexity of your solution?"],
+        feedback=[
+            "Great answer!",
+            "Consider optimizing your solution for time complexity.",
+        ],
+        possible_follow_ups=[
+            "Can you explain your thought process?",
+            "What is the time complexity of your solution?",
+        ],
         clarity_score=7,
         correctness="pending",
     )

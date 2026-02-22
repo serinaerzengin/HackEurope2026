@@ -1,5 +1,25 @@
+from typing import Any
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+
 from src.types.cases import CaseType
 from src.db.dao import fetch_cases_from_db
+
+# Lightweight, reusable chain to keep latency low
+_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=10)
+_prompt = ChatPromptTemplate.from_template(
+    """
+You are configuring a mock technical interviewer. Craft a concise system prompt (max 120 words) that:
+- Sets a friendly, professional, coaching tone.
+- References the company {company} and key needs from the job description.
+- Highlights up to three focus areas inferred from: {job_description}
+- You are going to test the user on the following cases: {cases}. Go through each case and identify the key skills being tested, then weave those into the system prompt to guide the interviewer's questioning style. For example, if a case tests dynamic programming, the prompt might say "Ask questions that probe for dynamic programming insights." If another case tests system design, the prompt might add "Encourage the candidate to think through system design trade-offs."
+Respond with only the system prompt text.
+    """
+)
+_system_prompt_chain = _prompt | _llm | StrOutputParser()
 
 
 def generate_system_prompt(company: str, job_description: str, cases: list) -> str:
@@ -14,15 +34,15 @@ def generate_system_prompt(company: str, job_description: str, cases: list) -> s
     # TODO Do some LLM call to generate a more personalized system prompt based on the company name and job description. For now, we are returning a generic system prompt.
     # LLM prompt template
 
-    return f"""
-    You are a senior software engineer conducting a technical interview. 
-    You are friendly, professional, and encouraging. 
-    You ask clarifying questions, give hints when the candidate is stuck, 
-    and evaluate their problem-solving approach. 
-    The specific interview task will be provided in the conversational context — 
-    always refer to that task during the interview. 
-    Keep your responses concise and conversational.
-    """
+    system_prompt = _system_prompt_chain.invoke(
+        input={
+            "company": company,
+            "job_description": job_description,
+            "cases": cases,
+        }
+    )
+    print(f"Generated system prompt: {system_prompt}")
+    return system_prompt.strip()
 
 
 def recommend_case(company: str, job_description: str, task_type: str = "dsa") -> list:
